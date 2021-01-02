@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=gnu++11 -Wall   -rdynamic CMakeFiles/lsclt.dir/home/jfq/1_work/12_git/fdbus/server/main_lc.cpp.o  -o lsclt -Wl,-rpath,/home/jfq/1_work/12_git/fdbus/build: -lpthread libcommon_base.so -lpthread 

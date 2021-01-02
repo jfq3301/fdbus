@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=gnu++11 -Wall   -rdynamic CMakeFiles/logviewer.dir/home/jfq/1_work/12_git/fdbus/server/main_log_client.cpp.o CMakeFiles/logviewer.dir/home/jfq/1_work/12_git/fdbus/server/CLogPrinter.cpp.o  -o logviewer -Wl,-rpath,/home/jfq/1_work/12_git/fdbus/build: -lpthread libcommon_base.so -lpthread 
