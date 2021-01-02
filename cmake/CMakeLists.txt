@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.1.3)
 project(fdbus C CXX)
 
 option(fdbus_ENABLE_LOG "Enable log" ON)
-option(fdbus_LOG_TO_STDOUT "Log to stdout" OFF)
+option(fdbus_LOG_TO_STDOUT "Log to stdout" ON)
 option(fdbus_SOCKET_ENABLE_PEERCRED "Enable peercred of socket" ON)
 option(fdbus_ALLOC_PORT_BY_SYSTEM "Allocate port number by system rather than by name server" OFF)
 option(fdbus_SECURITY "Enable security of FDBus" OFF)

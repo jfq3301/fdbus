@@ -19,6 +19,7 @@
 #include <common_base/fdb_option_parser.h>
 #include "CNameServer.h"
 #include <iostream>
+#include <utils/Log.h>
 
 int main(int argc, char **argv)
 {
@@ -96,6 +97,7 @@ int main(int argc, char **argv)
         wd_retries = atoi(wd_params_array[1]);
     }
 
+    LOG_D("[%s][%d]Enter.\n", __FUNCTION__, __LINE__);
     FDB_CONTEXT->enableNameProxy(false);
     FDB_CONTEXT->enableLogger(false);
     FDB_CONTEXT->init();
