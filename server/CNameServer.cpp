@@ -232,6 +232,7 @@ bool CNameServer::addServiceAddress(const std::string &svc_name,
 
 void CNameServer::onAllocServiceAddressReq(CBaseJob::Ptr &msg_ref)
 {
+    LOG_D("[%s][%d]Enter.\n", __FUNCTION__, __LINE__);
     auto msg = castToMessage<CFdbMessage *>(msg_ref);
     NFdbBase::FdbMsgServerName svc_name;
     auto sid = msg->session();
