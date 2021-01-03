@@ -154,6 +154,8 @@ if (fdbus_BUILD_CLIB)
     include(clib.cmake)
 endif()
 
+include(example.cmake)
+
 #set( CMAKE_VERBOSE_MAKEFILE on )
 
 print_variable(fdbus_ENABLE_LOG)

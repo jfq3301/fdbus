@@ -177,8 +177,18 @@ CClientSocket *CBaseClient::doConnect(const char *url, const char *host_name, in
     EFdbSocketType skt_type;
     const char *server_name;
 
+// enum EFdbSocketType
+// {
+//     FDB_SOCKET_TCP,
+//     FDB_SOCKET_UDP,
+//     FDB_SOCKET_IPC,
+//     FDB_SOCKET_SVC,
+//     FDB_SOCKET_MAX
+// };
+
     if (url)
     {
+        LOG_D("[%s][%d]url=%s.\n", __FUNCTION__, __LINE__, url);
         if (!CBaseSocketFactory::parseUrl(url, addr))
         {
             return 0;
@@ -188,13 +198,14 @@ CClientSocket *CBaseClient::doConnect(const char *url, const char *host_name, in
     }
     else
     {
+        LOG_D("[%s][%d]url is null.\n", __FUNCTION__, __LINE__);
         skt_type = FDB_SOCKET_SVC;
         server_name = 0;
     }
-    
 
     if (skt_type == FDB_SOCKET_SVC)
     {
+        LOG_D("[%s][%d]server_name=%s， skt_type == FDB_SOCKET_SVC.\n", __FUNCTION__, __LINE__, server_name);
         requestServiceAddress(server_name);
         return 0;
     }

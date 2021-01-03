@@ -53,12 +53,15 @@ bool CIntraNameProxy::connectToNameServer()
 #endif
     // timer will stop if connected since onOnline() will be called
     // upon success
+    LOG_D("[%s][%d]url=%s.\n", __FUNCTION__, __LINE__, url);
     doConnect(url);
     if (!connected())
     {
+        LOG_D("[%s][%d]url=%s, disconnect.\n", __FUNCTION__, __LINE__, url);
         mConnectTimer.fire();
         return false;
     }
+    LOG_D("[%s][%d]url=%s, connected.\n", __FUNCTION__, __LINE__, url);
 
     return true;
 }
@@ -71,6 +74,7 @@ CIntraNameProxy::CConnectTimer::CConnectTimer(CIntraNameProxy *proxy)
 
 void CIntraNameProxy::CConnectTimer::fire()
 {
+    LOG_D("[%s][%d]timeout=%s.\n", __FUNCTION__, __LINE__, CNsConfig::getNsReconnectInterval());
     enableOneShot(CNsConfig::getNsReconnectInterval());
 }
 
@@ -106,6 +110,7 @@ void CIntraNameProxy::removeAddressListener(const char *svc_name)
     }
 }
 
+// intraname: 内部名称
 void CIntraNameProxy::registerService(const char *svc_name)
 {
     if (!connected())
@@ -115,6 +120,7 @@ void CIntraNameProxy::registerService(const char *svc_name)
     NFdbBase::FdbMsgServerName msg_svc_name;
     msg_svc_name.set_name(svc_name);
     CFdbParcelableBuilder builder(msg_svc_name);
+    LOG_D("[%s][%d]invoke REQ_ALLOC_SERVICE_ADDRESS.\n", __FUNCTION__, __LINE__);
     invoke(NFdbBase::REQ_ALLOC_SERVICE_ADDRESS, builder);
 }
 
@@ -450,6 +456,7 @@ void CIntraNameProxy::onReply(CBaseJob::Ptr &msg_ref)
     {
         case NFdbBase::REQ_ALLOC_SERVICE_ADDRESS:
         {
+            LOG_D("[%s][%d]REQ_ALLOC_SERVICE_ADDRESS.\n", __FUNCTION__, __LINE__);
             NFdbBase::FdbMsgAddressList msg_addr_list;
             CFdbParcelableParser parser(msg_addr_list);
             if (!msg->deserialize(parser))
@@ -487,7 +494,7 @@ void CIntraNameProxy::onOnline(FdbSessionId_t sid, bool is_first)
         addNotifyItem(subscribe_list, NFdbBase::NTF_WATCHDOG);
     }
     subscribe(subscribe_list);
-    
+    LOG_D("[%s][%d]onOnline, sid=%d, is_first=%d.\n", __FUNCTION__, __LINE__, sid, is_first);
     FDB_CONTEXT->reconnectOnNsConnected();
 }
 

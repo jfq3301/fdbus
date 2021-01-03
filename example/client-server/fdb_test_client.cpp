@@ -21,6 +21,7 @@
 #include "../CFdbIfPerson.h"
 #include <common_base/cJSON/cJSON.h>
 #include <common_base/CFdbCJsonMsgBuilder.h>
+#include <utils/Log.h>
 
 #define FDB_INVOKE_SYNC 1
 
@@ -315,6 +316,7 @@ protected:
         FDB_LOG_I("response is receieved. sn: %d\n", msg->sn());
         /* print performance statistics */
         printMetadata(objId(), msg->metadata());
+        LOG_D("[%s][%d]Enter, code=%d.\n", __FUNCTION__, __LINE__, msg->code());
 
         switch (msg->code())
         {
@@ -394,6 +396,7 @@ protected:
                 }
                 std::ostringstream stream;
                 (void)persions.format(stream);
+                LOG_D("[%s][%d]Enter, person parse.\n", __FUNCTION__, __LINE__);
                 FDB_LOG_I("onReply: %s\n", stream.str().c_str());
 #if 0
                 for (auto pit = persions.pool().begin(); pit != persions.pool().end(); ++pit)

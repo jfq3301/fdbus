@@ -531,6 +531,7 @@ void CBaseEndpoint::updateSecurityLevel()
 
 bool CBaseEndpoint::requestServiceAddress(const char *server_name)
 {
+    LOG_D("[%s][%d]server_name=%s.\n", __FUNCTION__, __LINE__, server_name);
     if (role() == FDB_OBJECT_ROLE_NS_SERVER)
     {
         return false;
@@ -543,22 +544,34 @@ bool CBaseEndpoint::requestServiceAddress(const char *server_name)
     {
         // server name is not ready: this might happen when name server
         // is connected but bind() or connect() is not called.
+        LOG_D("[%s][%d]mNsName.empty.\n", __FUNCTION__, __LINE__);
         return false;
     }
 
     auto name_proxy = FDB_CONTEXT->getNameProxy();
     if (!name_proxy)
     {
+        LOG_D("[%s][%d]name_proxy is null.\n", __FUNCTION__, __LINE__);
         return false;
     }
 
+    LOG_D("[%s][%d]server_name=%s, mNsName=%s.\n", __FUNCTION__, __LINE__, server_name, mNsName.c_str());
     if (role() == FDB_OBJECT_ROLE_SERVER)
     {
+        LOG_D("[%s][%d]role is FDB_OBJECT_ROLE_SERVER=%d.\n", __FUNCTION__, __LINE__, FDB_OBJECT_ROLE_SERVER);
         name_proxy->registerService(mNsName.c_str());
         name_proxy->addAddressListener(mNsName.c_str());
     }
     else
     {
+        if (role() == FDB_OBJECT_ROLE_CLIENT)
+        {
+            LOG_D("[%s][%d]role is FDB_OBJECT_ROLE_CLIENT=%d.\n", __FUNCTION__, __LINE__, FDB_OBJECT_ROLE_CLIENT);
+        }
+        else
+        {
+            LOG_D("[%s][%d]role=%d.\n", __FUNCTION__, __LINE__, role());
+        }
         name_proxy->addServiceListener(mNsName.c_str());
     }
     mEventRouter.connectPeers();

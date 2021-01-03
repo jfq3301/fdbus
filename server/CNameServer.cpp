@@ -413,6 +413,7 @@ void CNameServer::broadcastSvcAddrLocal(const CFdbToken::tTokenList &tokens,
 
 void CNameServer::onRegisterServiceReq(CBaseJob::Ptr &msg_ref)
 {
+    LOG_D("[%s][%d]Enter.\n", __FUNCTION__, __LINE__);
     auto msg = castToMessage<CFdbMessage *>(msg_ref);
     NFdbBase::FdbMsgAddrBindResults addr_list;
     CFdbParcelableParser parser(addr_list);
@@ -783,6 +784,7 @@ void CNameServer::removeService(tRegistryTbl::iterator &reg_it)
 
 void CNameServer::onUnegisterServiceReq(CBaseJob::Ptr &msg_ref)
 {
+    LOG_D("[%s][%d]Enter.\n", __FUNCTION__, __LINE__);
     auto msg = castToMessage<CFdbMessage *>(msg_ref);
     NFdbBase::FdbMsgServerName msg_svc_name;
     CFdbParcelableParser parser(msg_svc_name);
@@ -802,11 +804,13 @@ void CNameServer::onUnegisterServiceReq(CBaseJob::Ptr &msg_ref)
 
 void CNameServer::onQueryServiceReq(CBaseJob::Ptr &msg_ref)
 {
+    LOG_D("[%s][%d]Enter.\n", __FUNCTION__, __LINE__);
     mHostProxy->queryServiceReq(msg_ref);
 }
 
 void CNameServer::onQueryServiceInterMachineReq(CBaseJob::Ptr &msg_ref)
 {
+    LOG_D("[%s][%d]Enter.\n", __FUNCTION__, __LINE__);
     auto msg = castToMessage<CFdbMessage *>(msg_ref);
     NFdbBase::FdbMsgServiceTable svc_tbl;
     auto session = FDB_CONTEXT->getSession(msg->session());
@@ -817,6 +821,7 @@ void CNameServer::onQueryServiceInterMachineReq(CBaseJob::Ptr &msg_ref)
 
 void CNameServer::onQueryHostReq(CBaseJob::Ptr &msg_ref)
 {
+    LOG_D("[%s][%d]Enter.\n", __FUNCTION__, __LINE__);
     auto msg = castToMessage<CFdbMessage *>(msg_ref);
     NFdbBase::FdbMsgHostAddressList host_tbl;
     mHostProxy->getHostTbl(host_tbl);
@@ -890,6 +895,8 @@ void CNameServer::onServiceOnlineReg(CBaseJob::Ptr &msg_ref, const CFdbMsgSubscr
     auto svc_name = sub_item->has_filter() ? sub_item->filter().c_str() : "";
     bool service_specified = svc_name[0] != '\0';
 
+    LOG_D("[%s][%d]Enter, msg_code=%d, svc_name=%s, service_specified=%d.\n", __FUNCTION__, __LINE__,
+       msg_code,  svc_name, service_specified);
     if (service_specified)
     {
         auto it = mRegistryTbl.find(svc_name);

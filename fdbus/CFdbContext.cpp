@@ -54,6 +54,7 @@ bool CFdbContext::asyncReady()
 {
     if (mEnableNameProxy)
     {
+        LOG_D("[%s][%d]new CIntraNameProxy.\n", __FUNCTION__, __LINE__);
         auto name_proxy = new CIntraNameProxy();
         name_proxy->connectToNameServer();
         mNameProxy = name_proxy;
@@ -63,6 +64,7 @@ bool CFdbContext::asyncReady()
         auto logger = new CLogProducer();
         std::string svc_url;
         logger->getDefaultSvcUrl(svc_url);
+        LOG_D("[%s][%d]svc_url=%s.\n", __FUNCTION__, __LINE__, svc_url.c_str());
         logger->doConnect(svc_url.c_str());
         mLogger = logger;
     }
@@ -225,10 +227,12 @@ CIntraNameProxy *CFdbContext::getNameProxy()
 
 void CFdbContext::reconnectOnNsConnected()
 {
+    LOG_D("[%s][%d]enter.\n", __FUNCTION__, __LINE__);
     auto &container = mEndpointContainer.getContainer();
     for (auto it = container.begin(); it != container.end(); ++it)
     {
         auto endpoint = it->second;
+        LOG_D("[%s][%d]requestServiceAddress.\n", __FUNCTION__, __LINE__);
         endpoint->requestServiceAddress();
     }
 }

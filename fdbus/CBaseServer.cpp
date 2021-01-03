@@ -151,6 +151,7 @@ CServerSocket *CBaseServer::doBind(const char *url, int32_t udp_port)
 
     if (skt_type == FDB_SOCKET_SVC)
     {
+        LOG_D("[%s][%d]server_name=%s.\n", __FUNCTION__, __LINE__, server_name);
         mApiSecurity.importSecLevel(server_name);
         requestServiceAddress(server_name);
         return 0;

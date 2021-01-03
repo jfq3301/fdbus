@@ -164,10 +164,10 @@ protected:
                 FDB_LOG_I("OBJ %d requested song id is: %d\n", this->objId(), song_id.id());
                 NFdbExample::NowPlayingDetails rep_msg;
 #if 0
-                rep_msg.set_artist("ÁõµÂ»ª");
-                rep_msg.set_album("Ê®Äê»ªÓï½ðÇú");
-                rep_msg.set_genre("Ïç´å");
-                rep_msg.set_title("ÍüÇéË®");
+                rep_msg.set_artist("ï¿½ï¿½ï¿½Â»ï¿½");
+                rep_msg.set_album("Ê®ï¿½ê»ªï¿½ï¿½ï¿½ï¿½ï¿½");
+                rep_msg.set_genre("ï¿½ï¿½ï¿½");
+                rep_msg.set_title("ï¿½ï¿½ï¿½ï¿½Ë®");
 #else
                 rep_msg.set_artist("Liu Dehua");
                 rep_msg.set_album("Ten Year's Golden Song");
@@ -469,6 +469,7 @@ protected:
         auto msg = castToMessage<CBaseMessage *>(msg_ref);
         FDB_LOG_I("OBJ %d response is receieved. sn: %d\n", this->objId(), msg->sn());
         printMetadata(this->objId(),  msg->metadata());
+        FDB_LOG_I("Test, hello.\n");
 
         switch (msg->code())
         {
@@ -641,16 +642,16 @@ int main(int argc, char **argv)
     //CBaseWorker *worker_ptr = 0;
 
     /*
-     * ²ÎÊý1£º1 - server£» 0 - client
-     * ²ÎÊý2£ºserviceµÄÃû×Ö
+     * ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½1 - serverï¿½ï¿½ 0 - client
+     * ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½serviceï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      *
-     * ±¾Àý×ÓÊ¹ÓÃname server×öµØÖ·½âÎö£¬url¸ñÊ½Îªsvc://server_name¡£Ö§³ÖµÄÐ­Òé°üÀ¨£º
+     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½name serverï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½urlï¿½ï¿½Ê½Îªsvc://server_nameï¿½ï¿½Ö§ï¿½Öµï¿½Ð­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      * - svc:
-     * svc://server_name - Ö¸¶¨ÒªÁ¬½Ó»ò´´½¨µÄ·þÎñÃû£»Ç°ÌáÊÇname server±ØÐëÒÑ¾­Æô¶¯
-     * - tcp£º
-     * tcp://ip_address:port_number - Ö¸¶¨tcpÁ¬½ÓµÄipµØÖ·ºÍ¶Ë¿ÚºÅ£»²»ÐèÒªname server
+     * svc://server_name - Ö¸ï¿½ï¿½Òªï¿½ï¿½ï¿½Ó»ò´´½ï¿½ï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½name serverï¿½ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½
+     * - tcpï¿½ï¿½
+     * tcp://ip_address:port_number - Ö¸ï¿½ï¿½tcpï¿½ï¿½ï¿½Óµï¿½ipï¿½ï¿½Ö·ï¿½Í¶Ë¿ÚºÅ£ï¿½ï¿½ï¿½ï¿½ï¿½Òªname server
      * - ipc:
-     * ipc://path - Ö¸¶¨unixÓòsocketµÄÂ·¾¶Ãû£»²»ÐèÒªname server
+     * ipc://path - Ö¸ï¿½ï¿½unixï¿½ï¿½socketï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªname server
      */
     if(argc < 3)
     {
@@ -690,7 +691,7 @@ int main(int argc, char **argv)
     }
     else
     {
-        // ´´½¨client²¢Á¬½ÓServer
+        // ï¿½ï¿½ï¿½ï¿½clientï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Server
         CMyClient<CBaseClient> *client = 0;
         for (int i = 2; i < argc; ++i)
         {
