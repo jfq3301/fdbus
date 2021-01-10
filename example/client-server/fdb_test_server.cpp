@@ -21,6 +21,7 @@
 #include "../CFdbIfPerson.h"
 #include <common_base/cJSON/cJSON.h>
 #include <common_base/CFdbCJsonMsgBuilder.h>
+#include <utils/Log.h>
 
 /* Define message ID; should be the same as server. */
 enum EGroupId
@@ -85,24 +86,24 @@ public:
         broadcast(NTF_ELAPSE_TIME, builder, "my_filter");
         }
 
-        /* another test: broadcast raw data */
-        char raw_data[256];
-        memset(raw_data, '=', sizeof(raw_data));
-        raw_data[255] = '\0';
-        broadcast(NTF_ELAPSE_TIME, raw_data, 256, "raw_buffer");
+        // /* another test: broadcast raw data */
+        // char raw_data[256];
+        // memset(raw_data, '=', sizeof(raw_data));
+        // raw_data[255] = '\0';
+        // broadcast(NTF_ELAPSE_TIME, raw_data, 256, "raw_buffer");
 
-        {
-        cJSON *f = cJSON_CreateObject();
-        cJSON_AddNumberToObject(f, "birthday", 19900101);
-        cJSON_AddNumberToObject(f, "id", 1);
-        cJSON_AddStringToObject(f, "name", "Sofia");
-        CFdbCJsonMsgBuilder builder(f);
-        broadcast(NTF_CJSON_TEST, builder);
-        cJSON_Delete(f);
-        }
-        broadcast(NTF_GROUP_TEST1);
-        broadcast(NTF_GROUP_TEST2);
-        broadcast(NTF_GROUP_TEST3);
+        // {
+        // cJSON *f = cJSON_CreateObject();
+        // cJSON_AddNumberToObject(f, "birthday", 19900101);
+        // cJSON_AddNumberToObject(f, "id", 1);
+        // cJSON_AddStringToObject(f, "name", "Sofia");
+        // CFdbCJsonMsgBuilder builder(f);
+        // broadcast(NTF_CJSON_TEST, builder);
+        // cJSON_Delete(f);
+        // }
+        // broadcast(NTF_GROUP_TEST1);
+        // broadcast(NTF_GROUP_TEST2);
+        // broadcast(NTF_GROUP_TEST3);
     }
 protected:
     void onOnline(FdbSessionId_t sid, bool is_first)
@@ -244,14 +245,14 @@ protected:
             }
             FdbSessionId_t sid = msg->session();
 
-            if (fdbIsGroup(msg_code))
-            {
-                FDB_LOG_I("group message %d, filter %s of session %d is registered!\n", msg_code, filter, sid);
-                msg->broadcast(NTF_GROUP_TEST1);
-                msg->broadcast(NTF_GROUP_TEST2);
-                msg->broadcast(NTF_GROUP_TEST3);
-                return;
-            }
+            // if (fdbIsGroup(msg_code))
+            // {
+            //     FDB_LOG_I("group message %d, filter %s of session %d is registered!\n", msg_code, filter, sid);
+            //     msg->broadcast(NTF_GROUP_TEST1);
+            //     msg->broadcast(NTF_GROUP_TEST2);
+            //     msg->broadcast(NTF_GROUP_TEST3);
+            //     return;
+            // }
             FDB_LOG_I("single message %d, filter %s of session %d is registered!\n", msg_code, filter, sid);
 
             /* reply initial value to the client subscribing the message id */
@@ -267,7 +268,9 @@ protected:
                         et.set_minute(10);
                         et.set_second(35);
                         CFdbProtoMsgBuilder builder(et);
+                        LOG_D("[%s][%d]before broadcast.\n", __FUNCTION__, __LINE__);
                         msg->broadcast(msg_code, builder, filter);
+                        LOG_D("[%s][%d]after broadcast.\n", __FUNCTION__, __LINE__);
                     }
                     else if (!str_filter.compare("raw_buffer"))
                     {
@@ -275,6 +278,7 @@ protected:
                         msg->broadcast(NTF_ELAPSE_TIME, raw_data.c_str(), raw_data.length() + 1, "raw_buffer");
                     }
                 }
+                break;
                 case NTF_MANUAL_UPDATE:
                 {
                     msg->broadcast(NTF_MANUAL_UPDATE);
@@ -293,7 +297,7 @@ private:
 
 /* create a timer: interval is 1500ms; cyclically; when timeout, call CMediaServer::broadcastElapseTime */
 CBroadcastTimer::CBroadcastTimer(CMediaServer *server)
-    : CMethodLoopTimer<CMediaServer>(1500, true, server, &CMediaServer::broadcastElapseTime)
+    : CMethodLoopTimer<CMediaServer>(150000, true, server, &CMediaServer::broadcastElapseTime)
 {}
 
 int main(int argc, char **argv)
@@ -315,7 +319,9 @@ int main(int argc, char **argv)
     }
 #endif
     /* start fdbus context thread */
+    LOG_D("[%s][%d]Before FDB_CONTEXT start.\n", __FUNCTION__, __LINE__);
     FDB_CONTEXT->start();
+    LOG_D("[%s][%d]After FDB_CONTEXT start.\n", __FUNCTION__, __LINE__);
     CBaseWorker *worker_ptr = &main_worker;
     /* start worker thread */
     worker_ptr->start();

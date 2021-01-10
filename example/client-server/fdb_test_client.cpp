@@ -102,77 +102,77 @@ public:
         song_id.set_id(1234);
         CFdbProtoMsgBuilder builder(song_id);
 
-#if defined(FDB_INVOKE_SYNC)
-        /* this version of invoke() is synchronous: once called, it blocks until server call reply() */
-        CBaseJob::Ptr ref(new CBaseMessage(REQ_METADATA));
-        invoke(ref, builder); /* onInvoke() will be called at server */
+// #if defined(FDB_INVOKE_SYNC)
+//         /* this version of invoke() is synchronous: once called, it blocks until server call reply() */
+//         CBaseJob::Ptr ref(new CBaseMessage(REQ_METADATA));
+//         invoke(ref, builder); /* onInvoke() will be called at server */
 
-        /* we return from invoke(); must get reply from server. Check it. */
-        auto msg = castToMessage<CBaseMessage *>(ref);
-        /* print performance statistics */
-        printMetadata(objId(), msg->metadata());
+//         /* we return from invoke(); must get reply from server. Check it. */
+//         auto msg = castToMessage<CBaseMessage *>(ref);
+//         /* print performance statistics */
+//         printMetadata(objId(), msg->metadata());
 
-        if (msg->isStatus())
-        {
-            /* Unable to get intended reply from server... Check what happen. */
-            int32_t id;
-            std::string reason;
-            if (!msg->decodeStatus(id, reason))
-            {
-                FDB_LOG_E("onReply: fail to decode status!\n");
-                return;
-            }
-            FDB_LOG_I("sync reply: status is received: msg code: %d, id: %d, reason: %s\n", msg->code(), id, reason.c_str());
-            return;
-        }
+//         if (msg->isStatus())
+//         {
+//             /* Unable to get intended reply from server... Check what happen. */
+//             int32_t id;
+//             std::string reason;
+//             if (!msg->decodeStatus(id, reason))
+//             {
+//                 FDB_LOG_E("onReply: fail to decode status!\n");
+//                 return;
+//             }
+//             FDB_LOG_I("sync reply: status is received: msg code: %d, id: %d, reason: %s\n", msg->code(), id, reason.c_str());
+//             return;
+//         }
 
-        /*
-         * recover protocol buffer from incoming package
-         * it should match the type replied from server 
-         */
-        NFdbExample::NowPlayingDetails now_playing;
-        CFdbProtoMsgParser parser(now_playing);
-        if (msg->deserialize(parser))
-        {
-            auto artist = now_playing.artist().c_str();
-            auto album = now_playing.album().c_str();
-            auto genre = now_playing.genre().c_str();
-            auto title = now_playing.title().c_str();
-            auto file_name = "";
-            if (now_playing.has_file_name())
-            {
-                file_name = now_playing.file_name().c_str();
-            }
-            auto folder_name = "";
-            if (now_playing.has_folder_name())
-            {
-                folder_name = now_playing.folder_name().c_str();
-            }
-            int32_t elapse_time = now_playing.elapse_time();
-            FDB_LOG_I("sync reply - artist: %s, album: %s, genre: %s, title: %s, file name: %s, folder name: %s, elapse time: %d\n",
-                        artist, album, genre, title, file_name, folder_name, elapse_time);
-        }
-        else
-        {
-            FDB_LOG_I("Error! Unable to decode message!!!\n");
-        }
-#else
-        /*
-         * This is asynchronous verison of invoke(); It returns immediately without blocking
-         * Reply from server will be received from onReply() callback
-         */
-        invoke(REQ_METADATA, builder);
-#endif
+//         /*
+//          * recover protocol buffer from incoming package
+//          * it should match the type replied from server 
+//          */
+//         NFdbExample::NowPlayingDetails now_playing;
+//         CFdbProtoMsgParser parser(now_playing);
+//         if (msg->deserialize(parser))
+//         {
+//             auto artist = now_playing.artist().c_str();
+//             auto album = now_playing.album().c_str();
+//             auto genre = now_playing.genre().c_str();
+//             auto title = now_playing.title().c_str();
+//             auto file_name = "";
+//             if (now_playing.has_file_name())
+//             {
+//                 file_name = now_playing.file_name().c_str();
+//             }
+//             auto folder_name = "";
+//             if (now_playing.has_folder_name())
+//             {
+//                 folder_name = now_playing.folder_name().c_str();
+//             }
+//             int32_t elapse_time = now_playing.elapse_time();
+//             FDB_LOG_I("sync reply - artist: %s, album: %s, genre: %s, title: %s, file name: %s, folder name: %s, elapse time: %d\n",
+//                         artist, album, genre, title, file_name, folder_name, elapse_time);
+//         }
+//         else
+//         {
+//             FDB_LOG_I("Error! Unable to decode message!!!\n");
+//         }
+// #else
+//         /*
+//          * This is asynchronous verison of invoke(); It returns immediately without blocking
+//          * Reply from server will be received from onReply() callback
+//          */
+//         invoke(REQ_METADATA, builder);
+// #endif
 
         invoke(REQ_RAWDATA);
 
-        /*
-         * trigger update manually; onBroadcast() will be called followed by
-         * onStatus().
-         */
-        CFdbMsgTriggerList update_list;
-        addTriggerItem(update_list, NTF_MANUAL_UPDATE);
-        update(update_list);
+        // /*
+        //  * trigger update manually; onBroadcast() will be called followed by
+        //  * onStatus().
+        //  */
+        // CFdbMsgTriggerList update_list;
+        // addTriggerItem(update_list, NTF_MANUAL_UPDATE);
+        // update(update_list);
     }
 
 protected:
@@ -188,13 +188,13 @@ protected:
             CFdbMsgSubscribeList subscribe_list;
             addNotifyItem(subscribe_list, NTF_ELAPSE_TIME, "my_filter");
             addNotifyItem(subscribe_list, NTF_ELAPSE_TIME, "raw_buffer");
-            addNotifyItem(subscribe_list, NTF_CJSON_TEST);
-            addNotifyGroup(subscribe_list, MEDIA_GROUP_1);
-            /*
-             * register NTF_MANUAL_UPDATE for manual update: it will not
-             * update unless update() is called
-             */
-            addUpdateItem(subscribe_list, NTF_MANUAL_UPDATE);
+            // addNotifyItem(subscribe_list, NTF_CJSON_TEST);
+            // addNotifyGroup(subscribe_list, MEDIA_GROUP_1);
+            // /*
+            //  * register NTF_MANUAL_UPDATE for manual update: it will not
+            //  * update unless update() is called
+            //  */
+            // addUpdateItem(subscribe_list, NTF_MANUAL_UPDATE);
             /* subscribe them, leading to onSubscribe() to be called at server */
             subscribe(subscribe_list);
         }
@@ -442,7 +442,7 @@ private:
 
 /* create a timer: interval is 1000ms; cyclically; when timeout, call CMediaClient::callServer() */
 CInvokeTimer::CInvokeTimer(CMediaClient *client)
-    : CMethodLoopTimer<CMediaClient>(1000, true, client, &CMediaClient::callServer)
+    : CMethodLoopTimer<CMediaClient>(100000, true, client, &CMediaClient::callServer)
 {}
 
 int main(int argc, char **argv)
@@ -465,6 +465,7 @@ int main(int argc, char **argv)
 #endif
     /* start fdbus context thread */
     FDB_CONTEXT->start();
+    LOG_D("[%s][%d]FDB_CONTEXT=%p.\n", __FUNCTION__, __LINE__, FDB_CONTEXT);
     FDB_CONTEXT->registerNsWatchdogListener([](const tNsWatchdogList &dropped_list)
         {
             for (auto it = dropped_list.begin(); it != dropped_list.end(); ++it)
@@ -473,6 +474,7 @@ int main(int argc, char **argv)
             }
         });
     CBaseWorker *worker_ptr = &main_worker;
+    LOG_D("[%s][%d]main_worker=%p.\n", __FUNCTION__, __LINE__, worker_ptr);
     /* start worker thread */
     worker_ptr->start();
 

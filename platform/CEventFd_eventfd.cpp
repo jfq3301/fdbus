@@ -18,6 +18,7 @@
 #include <sys/eventfd.h>
 #include <unistd.h>
 #include <common_base/CEventFd.h>
+#include <utils/Log.h>
 
 CEventFd::CEventFd()
     : mEventFd(-1)
@@ -55,10 +56,12 @@ bool CEventFd::pickEvent()
 bool CEventFd::triggerEvent()
 {
     int err;
+    LOG_D("[%s][%d]before eventfd_write.\n", __FUNCTION__, __LINE__);
     do
     {
         err = eventfd_write(mEventFd, 1);
     }
     while ((err < 0) && (errno == EINTR));
+    LOG_D("[%s][%d]after eventfd_write.\n", __FUNCTION__, __LINE__);
     return err >= 0;
 }

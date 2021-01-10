@@ -467,7 +467,7 @@ CBaseWorker::CJobQueue::CJobQueue(uint32_t max_size)
 bool CBaseWorker::CJobQueue::enqueue(CBaseJob::Ptr &job)
 {
     bool ret = false;
-    
+    LOG_D("[%s][%d]before enqueue, this=%p.\n", __FUNCTION__, __LINE__, this);
     if (!mMaxSize || (mJobQueue.size() < mMaxSize))
     {
         mEventLoop->lock();
@@ -477,9 +477,12 @@ bool CBaseWorker::CJobQueue::enqueue(CBaseJob::Ptr &job)
             ret = true;
         }
         mEventLoop->unlock();
+        LOG_D("[%s][%d]after enqueue.\n", __FUNCTION__, __LINE__);
         if (ret)
         {
+            LOG_D("[%s][%d]before notify.\n", __FUNCTION__, __LINE__);
             mEventLoop->notify();
+            LOG_D("[%s][%d]after notify.\n", __FUNCTION__, __LINE__);
         }
     }
     
@@ -555,10 +558,12 @@ bool CBaseWorker::init(uint32_t flag)
     {
         if (flag & FDB_WORKER_ENABLE_FD_LOOP)
         {
+            LOG_D("[%s][%d]CBaseWorker new CFdEventLoop, this=%p.\n", __FUNCTION__, __LINE__, this);
             mEventLoop = new CFdEventLoop();
         }
         else
         {
+            LOG_D("[%s][%d]CBaseWorker new CThreadEventLoop, this=%p.\n", __FUNCTION__, __LINE__, this);
             mEventLoop = new CThreadEventLoop();
         }
         mNormalJobQueue.eventLoop(mEventLoop);
@@ -652,6 +657,7 @@ void CBaseWorker::runOneJob(tJobContainer::iterator &it, bool run_job)
     {
         if (run_job)
         {
+            LOG_D("[%s][%d]before call run, job=%p.\n", __FUNCTION__, __LINE__, it);
             (*it)->success(true);
             (*it)->run(this, *it);
         }

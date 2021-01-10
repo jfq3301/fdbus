@@ -508,7 +508,10 @@ void CFdEventLoop::endWatchBlackList()
 
 bool CFdEventLoop::notify()
 {
-    return mEventFd.triggerEvent();
+    LOG_D("[%s][%d]before call triggerEvent.\n", __FUNCTION__, __LINE__);
+    auto ret = mEventFd.triggerEvent();
+    LOG_D("[%s][%d]after call triggerEvent.\n", __FUNCTION__, __LINE__);
+    return ret;
 }
 
 bool CFdEventLoop::init(CBaseWorker *worker)

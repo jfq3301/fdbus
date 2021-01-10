@@ -267,6 +267,7 @@ void CFdbMessage::setToken(CFdbBaseObject *obj)
 
 void CFdbMessage::run(CBaseWorker *worker, Ptr &ref)
 {
+    LOG_D("[%s][%d]before run, this=%p.\n", __FUNCTION__, __LINE__, this);
     if (mCallable.mFunc)
     {
         mCallable.mFunc(ref);
@@ -294,6 +295,7 @@ void CFdbMessage::dispatchMsg(Ptr &ref)
             &CFdbMessage::doReply,      //FDB_MT_RETURN_EVENT = 9,
             &CFdbMessage::doRequest,    //FDB_MT_PUBLISH = 10
         };
+     LOG_D("[%s][%d]before run, mType=%d.\n", __FUNCTION__, __LINE__, mType);
     if ((mType > FDB_MT_UNKNOWN) && (mType <= FDB_MT_MAX))
     {
         (this->*mHandle[mType])(ref);
@@ -508,6 +510,7 @@ bool CFdbMessage::broadcast(FdbMsgCode_t code
                            , IFdbMsgBuilder &data
                            , const char *filter)
 {
+    
     auto msg = new CFdbMessage(code, this, filter);
     msg->mFlag |= (mFlag & MSG_FLAG_ENABLE_LOG) | MSG_FLAG_INITIAL_RESPONSE | MSG_FLAG_NOREPLY_EXPECTED;
     if (!msg->serialize(data))
@@ -516,7 +519,10 @@ bool CFdbMessage::broadcast(FdbMsgCode_t code
         return false;
     }
     msg->forceUpdate(true);
-    return msg->broadcast();
+    LOG_D("[%s][%d]before broadcast CFdbMessage, this=%p, code=%d, filter=%s.\n", __FUNCTION__, __LINE__, this, code, filter);
+    bool ret = msg->broadcast();
+    LOG_D("[%s][%d]after broadcast CFdbMessage.\n", __FUNCTION__, __LINE__);
+    return ret;
 }
 
 bool CFdbMessage::broadcast(FdbMsgCode_t code
@@ -541,11 +547,13 @@ bool CFdbMessage::broadcast()
 {
    mType = FDB_MT_BROADCAST;
    setCallable(std::move(std::bind(&CFdbMessage::dispatchMsg, this, _1)));
+   LOG_D("[%s][%d]before sendAsync, this=%p.\n", __FUNCTION__, __LINE__, this);
    if (!CFdbContext::getInstance()->sendAsync(this))
    {
         setStatusMsg(NFdbBase::FDB_ST_UNABLE_TO_SEND, "Fail to send job to FDB_CONTEXT");
         return false;
    }
+   LOG_D("[%s][%d]after sendAsync.\n", __FUNCTION__, __LINE__);
    return true;
 }
 

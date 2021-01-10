@@ -15,6 +15,7 @@
  */
 
 #include <common_base/CEventFd.h>
+#include <utils/Log.h>
 
 CEventFd::CEventFd()
 {
@@ -45,6 +46,8 @@ bool CEventFd::pickEvent()
 bool CEventFd::triggerEvent()
 {
     uint8_t dummy = 0;
+    LOG_D("[%s][%d]before mPipe.write.\n", __FUNCTION__, __LINE__);
     int32_t ret = mPipe.write(&dummy, 1);
+    LOG_D("[%s][%d]after mPipe.write.\n", __FUNCTION__, __LINE__);
     return (ret < 0) ? false : true;
 }

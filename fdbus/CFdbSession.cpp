@@ -249,6 +249,7 @@ void CFdbSession::onInput(bool &io_error)
             doResponse(head, prefix, whole_buf);
             break;
         case FDB_MT_BROADCAST:
+            LOG_D("[%s][%d]FDB_MT_BROADCAST.\n", __FUNCTION__, __LINE__);
             doBroadcast(head, prefix, whole_buf);
             break;
         case FDB_MT_STATUS:
@@ -448,6 +449,7 @@ void CFdbSession::doBroadcast(NFdbBase::CFdbMessageHeader &head,
     if (object)
     {
         msg->decodeDebugInfo(head);
+        LOG_D("[%s][%d]CFdbSession doBroadcast enter.\n", __FUNCTION__, __LINE__);
         object->doBroadcast(msg_ref);
     }
 }

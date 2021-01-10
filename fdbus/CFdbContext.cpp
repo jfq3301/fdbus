@@ -42,6 +42,7 @@ const char *CFdbContext::getFdbLibVersion()
 
 bool CFdbContext::start(uint32_t flag)
 {
+    LOG_D("[%s][%d]FDB_CONTEXT start=%p.\n", __FUNCTION__, __LINE__, this);
     return CBaseWorker::start(FDB_WORKER_ENABLE_FD_LOOP | flag);
 }
 

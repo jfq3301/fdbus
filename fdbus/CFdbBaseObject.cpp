@@ -400,8 +400,10 @@ void CFdbBaseObject::migrateToWorker(CBaseJob::Ptr &msg_ref, tRemoteCallback cal
 {
     if (!worker)
     {
+        LOG_D("[%s][%d]worker is nullptr.\n", __FUNCTION__, __LINE__);
         worker = mWorker;
     }
+    LOG_D("[%s][%d]worker=%p.\n", __FUNCTION__, __LINE__, worker);
     if (worker)
     {
         if (enableMigrate())
@@ -470,6 +472,7 @@ void CFdbBaseObject::callSubscribe(CBaseJob::Ptr &msg_ref)
 
 void CFdbBaseObject::callBroadcast(CBaseJob::Ptr &msg_ref)
 {
+    LOG_D("[%s][%d]enter.\n", __FUNCTION__, __LINE__);
     onBroadcast(msg_ref);
 }
 
@@ -634,6 +637,7 @@ void CFdbBaseObject::doSubscribe(CBaseJob::Ptr &msg_ref)
 
 void CFdbBaseObject::doBroadcast(CBaseJob::Ptr &msg_ref)
 {
+    LOG_D("[%s][%d] CFdbBaseObject enter, mWorker=%p.\n", __FUNCTION__, __LINE__, mWorker);
     migrateToWorker(msg_ref, &CFdbBaseObject::callBroadcast);
 }
 
